@@ -1,7 +1,7 @@
 <template>
   <div class="hello">
     hello
-    <button v-on:click="test">跳转</button>
+    <button v-on:click="test" >跳转</button>
   </div>
 </template>
 
