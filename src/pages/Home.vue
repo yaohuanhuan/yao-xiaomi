@@ -1,7 +1,7 @@
 <template>
   <div style="">
     <div class="top-bar"></div>
-    <div style="width: 100%;height: 40px;z-index: 13">
+    <div style="width: 100%;height: 40px;">
       <div class="site-top-bar">
         <div class="site-top-bar-container">
           <div class="top-bar-left">
@@ -26,28 +26,26 @@
             <span class="sep">|</span>
             <a class="top-bar-text">消息通知</a>
             <span class="sep">|</span>
-            <div style="float: right">
-              <a class="cart-container" href="">
+            <div id="" style="float: right">
+              <a id="cart" class="cart-container" href="">
                 <img src="../assets/images/cart.png" style="height: 18px;width: 18px;margin:9px 5px auto 0;"
                      alt="购物车.png">
                 购物车（0）
               </a>
-              <div style="width: 50px;height:50px;background-color: black"></div>
+
             </div>
 
-            <!--<div style="float: right;height: 40px;display: flex;align-items: center;">-->
-            <!---->
-            <!--<a class="top-bar-text" style="font-size: 12px;color: #b0b0b0;line-height: 40px;text-decoration: none;" href="">购物车(0)</a>-->
-            <!--</div>-->
           </div>
-
+          <div id="cart-hint" class="cart-hint">
+            <span style="font-size: 12px;color: #b0b0b0;line-height: 40px;">购物车中还没有商品，赶紧选购吧！</span>
+          </div>
         </div>
+
       </div>
     </div>
     <div style="width: 100%;display: flex;align-items: center;justify-content: center">
       <Banner></Banner>
     </div>
-
 
   </div>
 
@@ -65,10 +63,31 @@
       Banner
     },
     data() {
-      return {}
+      return {
+
+      }
     },
     created() {
       this.fetchData()
+    },
+    mounted() {
+      $('#cart-hint').hide();
+      $('#cart').hover((data) => {
+        if (data.type === 'mouseenter') {
+          $('#cart-hint').show();
+          $('#cart-hint').animate({
+              height: '98px',
+            },180)
+
+        } else if (data.type === 'mouseleave') {
+          $('#cart-hint').animate({
+              height: '0px'
+            }
+          ,180,()=>{
+              $('#cart-hint').hide();
+            })
+        }
+      })
     },
     watch: {
       '': 'fetchData'
@@ -143,6 +162,20 @@
 
   .cart-container:hover {
     background-color: white;
+  }
+
+  .cart-hint {
+    width: 316px;
+    height: 0px;
+    position: absolute;
+    z-index: 10;
+    right: 338px;
+    top: 40px;
+    background-color: white;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
 </style>
