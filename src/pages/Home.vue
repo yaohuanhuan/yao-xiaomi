@@ -20,29 +20,55 @@
             <a class="top-bar-text">小爱开放平台</a>
           </div>
           <div class="top-bar-right">
+            <!--TODO 用伪类简化html-->
             <a class="top-bar-text">注册</a>
             <span class="sep">|</span>
             <a class="top-bar-text">登录</a>
             <span class="sep">|</span>
             <a class="top-bar-text">消息通知</a>
             <span class="sep">|</span>
-            <div id="" style="float: right">
+            <div id="" style="float: right;">
               <a id="cart" class="cart-container" href="">
                 <img src="../assets/images/cart.png" style="height: 18px;width: 18px;margin:9px 5px auto 0;"
                      alt="购物车.png">
                 购物车（0）
               </a>
-
             </div>
-
           </div>
           <div id="cart-hint" class="cart-hint">
             <span style="font-size: 12px;color: #b0b0b0;line-height: 40px;">购物车中还没有商品，赶紧选购吧！</span>
           </div>
         </div>
-
       </div>
     </div>
+    <div
+      style="width: 100%;height: 88px;display: flex;background-color: #ffffff;flex-direction: column;align-items: center;position: relative">
+      <div style="width: 1226px;height: 88px;display: flex;align-items: center">
+        <a class="logo" href="">Mi</a>
+        <div style="width: 184px;height: 88px;background-color: #ffffff"></div>
+        <div id="menu-container" style="display: flex;width: 500px;justify-content: space-between">
+          <a :id="'menu'+index" class="top-menu-text" v-for="(item,index) in topMenu" href="">{{item}}</a>
+        </div>
+
+      </div>
+      <div id="menu-detail-container" class="top-menu-detail">
+        <ul style="width: 1226px;margin: auto;">
+          <div   style="display: flex;flex-direction: row">
+            <div v-for="(item,index) in menuData" style="display: flex;">
+              <div class="menu-item" >
+                <img :src="item.image" alt="" style="width: 160px;height: 110px;">
+                <a href="" style="font-size: 12px;color: #333;text-decoration: none;margin-top: 14px">{{item.name}}</a>
+                <p style="font-size: 12px;color: #ff6700;">{{item.price}}</p>
+              </div>
+              <div style="height: 100px;width: 1px;background-color: #d6d6d6;margin-top: 40px" v-if="index != menuData.length - 1"></div>
+            </div>
+
+          </div>
+
+        </ul>
+      </div>
+    </div>
+
     <div style="width: 100%;display: flex;align-items: center;justify-content: center">
       <Banner></Banner>
     </div>
@@ -64,6 +90,17 @@
     },
     data() {
       return {
+        cartBlockShow: false,
+        cartHintBlockShow: false,
+        topMenu: ['小米手机', '红米', '电视', '笔记本', '空调', '新品', '路由器', '智能硬件'],
+        menuData: [
+          {image: require('../assets/images/mix3-320.png'), name: '小米8', price: '3233起'},
+          {image: require('../assets/images/mix3-320.png'), name: '小米7', price: '3233起'},
+          {image: require('../assets/images/mix3-320.png'), name: '小米6', price: '3233起'},
+          {image: require('../assets/images/mix3-320.png'), name: '小米6', price: '3233起'},
+          {image: require('../assets/images/mix3-320.png'), name: '小米6', price: '3233起'},
+          {image: require('../assets/images/mix3-320.png'), name: '小米6', price: '3233起'},
+        ]
 
       }
     },
@@ -71,23 +108,9 @@
       this.fetchData()
     },
     mounted() {
-      $('#cart-hint').hide();
-      $('#cart').hover((data) => {
-        if (data.type === 'mouseenter') {
-          $('#cart-hint').show();
-          $('#cart-hint').animate({
-              height: '98px',
-            },180)
+      this.displayInit('#cart', '#cart-hint', '98px')
+      this.displayInit('#menu-container', '#menu-detail-container', '230px')
 
-        } else if (data.type === 'mouseleave') {
-          $('#cart-hint').animate({
-              height: '0px'
-            }
-          ,180,()=>{
-              $('#cart-hint').hide();
-            })
-        }
-      })
     },
     watch: {
       '': 'fetchData'
@@ -95,6 +118,67 @@
     methods: {
       fetchData() {
 
+
+      },
+      /**
+       *
+       * @param id1 显示块 '#cart'
+       * @param id2 被显示块 '#cart-hint'
+       * @param height 高度 '98px'
+       */
+      displayInit(id1, id2, height) {
+        $(id2).hide();
+        var cartTimeout;
+        var cartHintTimeout;
+        //用定时器和状态管理解决该需求
+        $(id1).hover((data) => {
+          if (data.type === 'mouseenter') {
+            this.cart = true
+            this.cartHint = false
+            clearTimeout(cartHintTimeout)
+            clearTimeout(cartTimeout)
+            if (this.cart || this.cartHint) {
+              $(id2).show();
+              $(id2).animate({
+                height: height,
+              }, 180)
+            }
+          } else if (data.type === 'mouseleave') {
+            this.cart = false
+            cartTimeout = setTimeout(() => {
+              $(id2).animate({
+                  height: '0px'
+                }
+                , 180, () => {
+                  $(id2).hide();
+                })
+            }, 200)
+          }
+        })
+        $(id2).hover((data) => {
+          if (data.type === 'mouseenter') {
+            this.cart = false
+            this.cartHint = true
+            clearTimeout(cartHintTimeout)
+            clearTimeout(cartTimeout)
+            $(id2).show();
+            $(id2).animate({
+              height: height,
+            }, 180)
+          } else if (data.type === 'mouseleave') {
+            this.cart = false
+            this.cartHint = true
+            cartHintTimeout = setTimeout(() => {
+              $(id2).animate({
+                  height: '0px'
+                }
+                , 180, () => {
+                  $(id2).hide();
+                })
+            }, 200)
+
+          }
+        })
 
       }
     }
@@ -158,6 +242,7 @@
     align-items: center;
     justify-content: center;
     padding: 0 10px 0 10px;
+
   }
 
   .cart-container:hover {
@@ -176,6 +261,56 @@
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+
+  .logo {
+    width: 55px;
+    height: 55px;
+    overflow: hidden;
+    display: block;
+    background-color: #ff6700;
+    text-decoration: none;
+    font-size: 32px;
+    color: white;
+    font-weight: 400;
+    text-align: center;
+    line-height: 55px;
+  }
+
+  .top-menu-text {
+    text-decoration: none;
+    font-size: 16px;
+    color: #333;
+    display: block;
+    height: 35px;
+    text-align: center;
+    line-height: 35px;
+  }
+
+  .top-menu-text:hover {
+    color: #ff6700;
+  }
+
+  .top-menu-detail {
+    width: 100%;
+    height: 0px;
+    position: absolute;
+    background-color: white;
+    top: 88px;
+    z-index: 1;
+    border-top: 1px solid #e0e0e0;
+    box-shadow: 0 1px 1px #cecece;
+  }
+
+  .menu-item {
+    display: flex;
+    float: left;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 203px;
+    margin-top: 36px;
+
   }
 
 </style>
