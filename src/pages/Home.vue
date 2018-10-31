@@ -74,20 +74,27 @@
         <Banner/>
         <div class="left-menu-container">
           <div style="position: relative;display: flex">
-            <ul class="left-menu-ul">
-              <li class="left-menu-li" v-for="(item,index) in leftMenu">
+            <ul id="left-menu-ul" class="left-menu-ul">
+              <li :id="'li'+index" class="left-menu-li" v-for="(item,index) in leftMenu">
                 <a :id="'leftMenu'+index" class="left-menu-a" href="">{{item}}</a>
                 <Arrows color="#b3afa5" size="1" direction="right" style="position: absolute;right: 25px;"></Arrows>
               </li>
             </ul>
-            <div style="width: 150px;height: 460px;background-color: white;top: 0;position: absolute;left: 234px;box-shadow:0 8px 16px rgba(0,0,0,0.18)"></div>
+            <div id="left-menu-detail" class="left-menu-detail">
+              <div style="width: 248px;height: 458px;background-color: white;display: flex;flex-direction: column"
+                   v-for="(outItem,outIndex) in (Math.ceil(menuDetail.length/6))">
+                <div style="width: 248px;height: 76px;position: relative;"
+                     v-for="(item,index) in (outItem > menuDetail.length / 6 ?  menuDetail.length % 6 : 6)">
+                  <a :id="'leftMenu'+index" href="" class="left-menu-item">{{menuDetail[outIndex*6+index].name}}</a>
+                  <img style="width: 40px;height: 40px;position: absolute;top: 18px;left: 20px"
+                       :src="menuDetail[outIndex*6+index].image" alt="">
+                </div>
+              </div>
+            </div>
           </div>
-
-
         </div>
       </div>
     </div>
-
   </div>
 
 </template>
@@ -167,23 +174,64 @@
             {image: require('../assets/images/top_menu/tixudao.jpg'), name: '小米8屏幕', price: '3233起'},
             {image: require('../assets/images/top_menu/xiaomijingshuiqi.jpg'), name: '小米8青春版', price: '3233起'},
           ]
-        ]
+        ],
+        menuDetail: [],
+        allLeftMenuData: [
+          [{
+            name: '小米手机1', image: require('../assets/images/left_menu/qingchun-80.png')
+          }],
+          [{
+            name: '小米手机2', image: require('../assets/images/left_menu/heisha-80.png')
+          }],
+          [{
+            name: '小米手机3', image: require('../assets/images/left_menu/80808080808080.jpg')
+          }],
+          [{
+            name: '小米手机', image: require('../assets/images/left_menu/qingchun-80.png')
+          }],
+          [{
+            name: '小米手机', image: require('../assets/images/left_menu/qingchun-80.png')
+          }],
+          [{
+            name: '小米手机', image: require('../assets/images/left_menu/qingchun-80.png')
+          }],
+          [{
+            name: '小米手机', image: require('../assets/images/left_menu/qingchun-80.png')
+          }],
+          [{
+            name: '小米手机', image: require('../assets/images/left_menu/qingchun-80.png')
+          }],
+          [{
+            name: '小米手机', image: require('../assets/images/left_menu/qingchun-80.png')
+          }],
+          [{
+            name: '小米手机', image: require('../assets/images/left_menu/qingchun-80.png')
+          }],
+        ],
       }
     },
     created() {
       this.fetchData()
     },
     mounted() {
-      this.displayInit('#cart', '#cart-hint', '98px')
-      this.displayInit('#menu-container', '#menu-detail-container', '230px')
-      for (let i = 0; i < 8; i++) {
+      this.displayAnimInit('#cart', '#cart-hint',null, '98px',180)
+      this.displayAnimInit('#menu-container', '#menu-detail-container',null, '230px',180)
+      this.displayInit('#left-menu-ul', '#left-menu-detail')
+
+      for (let i = 0; i < this.topMenu.length; i++) {
         $('#menu' + i).hover((data) => {
           if (data.type === 'mouseenter') {
             this.menuData = this.allMenuData[i]
           }
         })
       }
-
+      for (let i = 0; i < this.leftMenu.length; i++) {
+        $('#leftMenu' + i).hover((data) => {
+          if (data.type === 'mouseenter') {
+            this.menuDetail = this.allLeftMenuData[i]
+          }
+        })
+      }
     },
     watch: {
       '': 'fetchData'
@@ -197,67 +245,6 @@
       test() {
         console.log('123')
       },
-      /**
-       *
-       * @param id1 显示块 '#cart'
-       * @param id2 被显示块 '#cart-hint'
-       * @param height 高度 '98px'
-       */
-      displayInit(id1, id2, height) {
-        $(id2).hide();
-        var cartTimeout;
-        var cartHintTimeout;
-        //用定时器和状态管理解决该需求
-        $(id1).hover((data) => {
-          if (data.type === 'mouseenter') {
-            this.cart = true
-            this.cartHint = false
-            clearTimeout(cartHintTimeout)
-            clearTimeout(cartTimeout)
-            if (this.cart || this.cartHint) {
-              $(id2).show();
-              $(id2).animate({
-                height: height,
-              }, 180)
-            }
-          } else if (data.type === 'mouseleave') {
-            this.cart = false
-            cartTimeout = setTimeout(() => {
-              $(id2).animate({
-                  height: '0px'
-                }
-                , 180, () => {
-                  $(id2).hide();
-                })
-            }, 200)
-          }
-        })
-        $(id2).hover((data) => {
-          if (data.type === 'mouseenter') {
-            this.cart = false
-            this.cartHint = true
-            clearTimeout(cartHintTimeout)
-            clearTimeout(cartTimeout)
-            $(id2).show();
-            $(id2).animate({
-              height: height,
-            }, 180)
-          } else if (data.type === 'mouseleave') {
-            this.cart = false
-            this.cartHint = true
-            cartHintTimeout = setTimeout(() => {
-              $(id2).animate({
-                  height: '0px'
-                }
-                , 180, () => {
-                  $(id2).hide();
-                })
-            }, 200)
-
-          }
-        })
-
-      }
     }
   }
 </script>
@@ -425,10 +412,12 @@
 
   .input-search:focus {
     border-color: #ff6700;
+    transition: 500ms;
   }
 
   .input-search:active {
     border-color: #ff6700;
+    transition: 500ms;
   }
 
   .search-btn {
@@ -485,4 +474,32 @@
     z-index: 1;
   }
 
+  .left-menu-a:hover {
+    background-color: #ff6700;
+  }
+
+  .left-menu-detail {
+    height: 458px;
+    background-color: white;
+    top: 0;
+    position: absolute;
+    left: 234px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.18);
+    display: flex;
+    border: 1px solid #e0e0e0;
+    border-left-width: 0;
+  }
+
+  .left-menu-item {
+    line-height: 76px;
+    display: flex;
+    padding-left: 70px;
+    color: #333;
+    font-size: 14px;
+    text-decoration: none;
+  }
+
+  .left-menu-item:hover{
+    color: #ff6700;
+  }
 </style>

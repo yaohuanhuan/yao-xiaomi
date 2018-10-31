@@ -4,10 +4,11 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import $ from 'jquery'
+import MyPlugin from './Global';
 import './assets/css/global.css'
 
 Vue.config.productionTip = false
-
+Vue.use(MyPlugin);
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
