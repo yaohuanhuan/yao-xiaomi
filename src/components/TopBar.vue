@@ -17,17 +17,15 @@
         <a class="top-bar-text">小爱开放平台</a>
       </div>
       <div class="top-bar-right">
-        <!--TODO 用伪类简化html-->
         <a class="top-bar-text">注册</a>
         <span class="sep">|</span>
-        <a class="top-bar-text">登录</a>
+        <router-link class="top-bar-text" :to="{name:'Login'}">登录</router-link>
         <span class="sep">|</span>
         <a class="top-bar-text">消息通知</a>
         <span class="sep">|</span>
         <div id="" style="float: right;">
           <a id="cart" class="cart-container" href="">
-            <img src="../assets/images/cart.png" style="height: 18px;width: 18px;margin:9px 5px auto 0;"
-                 alt="购物车.png">
+            <img src="../assets/images/cart.png" style="height: 18px;width: 18px;margin:9px 5px auto 0;" alt="购物车.png">
             购物车（0）
           </a>
         </div>
@@ -94,6 +92,7 @@
     color: #b0b0b0;
     line-height: 40px;
     text-decoration: none;
+    cursor: pointer;
 
   }
 

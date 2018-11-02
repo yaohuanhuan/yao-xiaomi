@@ -1,7 +1,7 @@
 <template>
   <div class="top-menu-container">
     <div style="width: 1226px;height: 98px;display: flex;align-items: center;position: relative">
-      <a class="logo" href="">Mi</a>
+      <a class="logo" href=""></a>
       <div style="width: 184px;height: 98px;background-color: #ffffff"></div>
       <div id="menu-container" style="display: flex;width: 500px;justify-content: space-between">
         <a :id="'menu'+index" class="top-menu-text" v-for="(item,index) in topMenu" href="">{{item}}</a>
@@ -138,15 +138,10 @@
   .logo {
     width: 55px;
     height: 55px;
-    overflow: hidden;
     display: block;
-    background-color: #ff6700;
-    text-decoration: none;
-    font-size: 32px;
-    color: white;
-    font-weight: 400;
-    text-align: center;
-    line-height: 55px;
+    background: url("../assets/images/top_menu/logo.png");
+
+
   }
 
   .top-menu-text {

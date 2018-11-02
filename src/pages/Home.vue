@@ -27,6 +27,9 @@
   import TopBar from '../components/TopBar'
   import MainList from '../components/MainList'
 
+
+
+
   export default {
     name: 'Home',
     components: {
@@ -35,7 +38,7 @@
       TopMenu,
       LeftMenu,
       TopBar,
-      MainList
+      MainList,
     },
     data() {
       return {
@@ -57,6 +60,9 @@
 
 
       },
+      test(){
+        this.$router.push({ path: 'HelloWorld' })
+      }
 
     }
   }
